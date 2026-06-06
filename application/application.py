@@ -4,7 +4,12 @@ from flask import Flask, render_template, request, make_response
 from flask_caching import Cache
 from config import TEMPLATES_PATH, TEXT_PATH
 from application.helpers import *
+from openai import OpenAI
+import os
 
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY")
+)
 
 app = Flask(__name__, template_folder=TEMPLATES_PATH)
 app.jinja_env.filters["is_active"] = is_active
@@ -44,15 +49,48 @@ def about():
     return render_template("about.html", content=content)
 
 
-@app.route("/skills")
-@cache.cached()
-def skills():
-    """Renders the 'Skills' page of the website."""
+# @app.route("/chat")
+# @cache.cached()
+# def skills():
+#     """Renders the 'Skills' page of the website."""
 
-    skills = get_skills(f"{TEXT_PATH}/skills.json")
+#     skills = get_skills(f"{TEXT_PATH}/skills.json")
 
-    return render_template("skills.html", skills=skills)
+#     return render_template("skills.html", skills=skills)
 
+@app.route("/chat", methods=["GET", "POST"])
+def chat():
+
+    if "messages" not in session:
+        session["messages"] = []
+
+    if request.method == "POST":
+
+        prompt = request.form.get("prompt")
+
+        session["messages"].append({
+            "role": "user",
+            "content": prompt
+        })
+
+        response = client.responses.create(
+            model="gpt-4.1-mini",
+            input=prompt
+        )
+
+        answer = response.output_text
+
+        session["messages"].append({
+            "role": "assistant",
+            "content": answer
+        })
+
+        session.modified = True
+
+    return render_template(
+        "skills.html",
+        messages=session["messages"]
+    )
 
 @app.route("/portfolio")
 @cache.cached()
