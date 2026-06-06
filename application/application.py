@@ -10,6 +10,7 @@ import os
 client = OpenAI(
     api_key=os.getenv("OPENAI_API_KEY")
 )
+print(os.getenv("OPENAI_API_KEY"))
 
 app = Flask(__name__, template_folder=TEMPLATES_PATH)
 app.jinja_env.filters["is_active"] = is_active
