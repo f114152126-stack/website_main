@@ -21,97 +21,62 @@ app.config["CACHE_DEFAULT_TIMEOUT"] = 3600
 cache = Cache(app)
 
 # -------------------------
-# 隨機素材（作為 prompt seed）
+# 隨機素材庫（核心）
 # -------------------------
 
 worlds = [
-    "科技與魔法並存的世界",
-    "AI統治的未來都市",
-    "廢土後文明重建世界",
-    "太空殖民地",
-    "隱藏在人類社會的地下世界"
+    "在一個科技與魔法並存的世界",
+    "在人類已經移居外太空的未來殖民地",
+    "在一個被AI統治的城市",
+    "在戰爭後重建的廢土世界",
+    "在一個隱藏於現代社會的地下世界"
 ]
 
 conflicts = [
-    "資源爭奪戰",
-    "AI與人類衝突",
-    "秘密組織操控世界",
-    "古代力量復甦",
-    "政府實驗失控"
+    "資源極度匱乏，各勢力爭奪生存空間",
+    "人類與人工智慧之間爆發衝突",
+    "古老勢力重新復甦並試圖掌控世界",
+    "政府秘密實驗導致世界秩序崩壞",
+    "不同陣營為了未知能源展開戰爭"
 ]
 
-arcs = [
-    "逐漸發現自己被改造過",
-    "追尋失去的記憶",
-    "被迫成為關鍵人物",
-    "在命運中掙扎",
-    "成為改變世界的核心"
+character_arcs = [
+    "逐漸發現自己的過去被刻意隱藏",
+    "在命運與自由之間掙扎",
+    "被迫成為改變世界的關鍵人物",
+    "從普通人逐漸成長為傳奇存在",
+    "在追尋真相的過程中失去重要的人"
 ]
 
-plots = [
-    "阻止世界崩壞",
-    "揭開真相",
-    "對抗強大勢力",
-    "拯救重要的人",
-    "改寫世界秩序"
+main_plots = [
+    "踏上尋找真相的旅程",
+    "被捲入一場跨勢力的陰謀",
+    "必須保護一個關鍵的秘密",
+    "與強大敵人展開生死對決",
+    "試圖阻止即將毀滅世界的事件"
 ]
 
 
-# -------------------------
-# Step 1: 生成 prompt seed
-# -------------------------
+def generate_story(job, gender, height):
+    world = random.choice(worlds)
+    conflict = random.choice(conflicts)
+    arc = random.choice(character_arcs)
+    plot = random.choice(main_plots)
 
-def build_seed(job, gender, height):
-    return {
-        "world": random.choice(worlds),
-        "conflict": random.choice(conflicts),
-        "arc": random.choice(arcs),
-        "plot": random.choice(plots),
-        "job": job,
-        "gender": gender,
-        "height": height
-    }
+    character_story = (
+        f"一名身高 {height} cm 的 {gender} {job}，"
+        f"在成長過程中展現出與眾不同的能力，"
+        f"並且 {arc}。"
+    )
 
+    world_background = f"{world}，{conflict}。"
 
-# -------------------------
-# Step 2: 轉成 AI Prompt（關鍵）
-# -------------------------
+    main_story = (
+        f"{world}中，一名{job}因命運而被捲入事件，"
+        f"他/她將{plot}，並在過程中改變整個世界的走向。"
+    )
 
-def build_prompt(seed):
-    return f"""
-You are a professional story writer.
-
-Create a cinematic character story package.
-
-Requirements:
-- Output in Traditional Chinese
-- Make it vivid and narrative-driven
-
-Character Information:
-- Job: {seed['job']}
-- Gender: {seed['gender']}
-- Height: {seed['height']} cm
-
-World Setting:
-{seed['world']}
-
-Conflict:
-{seed['conflict']}
-
-Character Arc Hint:
-{seed['arc']}
-
-Main Plot Hint:
-{seed['plot']}
-
-Please output in the following structure:
-
-1. World Background (世界觀)
-2. Character Story (人物故事)
-3. Main Story (主要故事)
-
-Make it immersive and coherent.
-"""
+    return world_background, character_story, main_story
 
 @app.route("/")
 def loading():
@@ -188,9 +153,7 @@ def skills():
 @app.route("/portfolio", methods=["GET", "POST"])
 def portfolio():
 
-    world = None
-    character = None
-    story = None
+    result_story = None
 
     if request.method == "POST":
 
@@ -198,36 +161,42 @@ def portfolio():
         gender = request.form.get("gender")
         height = request.form.get("height")
 
-        seed = build_seed(job, gender, height)
-        prompt = build_prompt(seed)
+        # 🧠 Step 1：組 prompt（關鍵）
+        prompt = f"""
+你是一位小說作家，請根據以下角色設定，創作一段完整、連貫的短篇故事（只輸出一段，不要分段，不要標題）：
 
-        # 🔥 OpenAI call
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "system", "content": "You are a professional narrative designer."},
-                {"role": "user", "content": prompt}
-            ]
-        )
+角色資訊：
+- 職業：{job}
+- 性別：{gender}
+- 身高：{height} cm
 
-        output = response.choices[0].message.content
+要求：
+- 必須有世界背景
+- 必須有角色成長或衝突
+- 必須有事件推進
+- 風格偏奇幻或科幻敘事
+- 長度約 200~300 字
+"""
 
-        # 👉 簡單切割（如果模型照格式輸出）
         try:
-            parts = output.split("\n\n")
-            world = parts[0]
-            character = parts[1]
-            story = parts[2]
-        except:
-            world = output
-            character = ""
-            story = ""
+            # 🧠 Step 2：呼叫 OpenAI
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": "你是一位專業小說作家"},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.9
+            )
+
+            result_story = response.choices[0].message.content
+
+        except Exception as e:
+            result_story = f"Error: {str(e)}"
 
     return render_template(
         "portfolio.html",
-        world=world,
-        character=character,
-        story=story
+        story=result_story
     )
 
 
