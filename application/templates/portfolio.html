@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    AI Image Generator
+AI Story Generator
 {% endblock %}
 
 {% block main %}
@@ -14,43 +14,58 @@
 
     <div class="row mb-4">
         <div class="col text-center">
-            <h1 class="page-title">AI IMAGE GENERATOR</h1>
-            <p>Generate images with AI</p>
+            <h1 class="page-title">AI STORY GENERATOR</h1>
+            <p>Generate character & story randomly</p>
         </div>
     </div>
 
     <div class="row">
 
-        <!-- Left Panel -->
+        <!-- LEFT INPUT -->
         <div class="col-lg-4">
 
             <div class="card card-design">
 
                 <div class="card-header">
-                    Prompt
+                    Character Settings
                 </div>
 
                 <div class="card-body">
 
                     <form method="POST">
 
+                        <!-- 職業 -->
                         <div class="mb-3">
-
-                            <textarea
-                                class="form-control"
-                                rows="6"
-                                name="prompt"
-                                placeholder="Describe your image..."
-                                required></textarea>
-
+                            <label class="form-label">Job</label>
+                            <input type="text"
+                                   class="form-control"
+                                   name="job"
+                                   placeholder="e.g. Warrior, Hacker, Doctor"
+                                   required>
                         </div>
 
-                        <button
-                            class="btn btn-primary w-100"
-                            type="submit">
+                        <!-- 性別 -->
+                        <div class="mb-3">
+                            <label class="form-label">Gender</label>
+                            <select class="form-control" name="gender" required>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="unknown">Unknown</option>
+                            </select>
+                        </div>
 
-                            Generate Image
+                        <!-- 身高 -->
+                        <div class="mb-3">
+                            <label class="form-label">Height (cm)</label>
+                            <input type="number"
+                                   class="form-control"
+                                   name="height"
+                                   placeholder="e.g. 175"
+                                   required>
+                        </div>
 
+                        <button class="btn btn-primary w-100" type="submit">
+                            Generate Story
                         </button>
 
                     </form>
@@ -61,27 +76,38 @@
 
         </div>
 
-        <!-- Right Panel -->
+        <!-- RIGHT OUTPUT -->
         <div class="col-lg-8">
 
             <div class="card card-design">
 
                 <div class="card-header">
-                    Generated Image
+                    Generated Story
                 </div>
 
-                <div class="card-body text-center">
+                <div class="card-body">
 
-                    {% if image_url %}
+                    {% if world %}
 
-                        <img
-                            src="{{ image_url }}"
-                            class="img-fluid rounded shadow">
+                        <div class="mb-4">
+                            <h4>🌍 World Background</h4>
+                            <p>{{ world }}</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <h4>👤 Character Story</h4>
+                            <p>{{ character }}</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <h4>📖 Main Story</h4>
+                            <p>{{ story }}</p>
+                        </div>
 
                     {% else %}
 
-                        <div class="text-muted py-5">
-                            No image generated yet
+                        <div class="text-muted text-center py-5">
+                            No story generated yet
                         </div>
 
                     {% endif %}
