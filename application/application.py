@@ -49,15 +49,6 @@ def about():
     return render_template("about.html", content=content)
 
 
-# @app.route("/skills")
-# @cache.cached()
-# def skills():
-#     """Renders the 'Skills' page of the website."""
-
-#     skills = get_skills(f"{TEXT_PATH}/skills.json")
-
-#     return render_template("skills.html", skills=skills)
-
 @app.route("/skills", methods=["GET", "POST"])
 def skills():
 
@@ -92,14 +83,36 @@ def skills():
         messages=session["messages"]
     )
 
-@app.route("/portfolio")
-@cache.cached()
+# @app.route("/portfolio")
+# @cache.cached()
+# def portfolio():
+#     """Renders the 'Portfolio' page of the website."""
+
+#     repos = get_repositories()
+
+#     return render_template("portfolio.html", repos=repos)
+
+@app.route("/portfolio", methods=["GET", "POST"])
 def portfolio():
-    """Renders the 'Portfolio' page of the website."""
 
-    repos = get_repositories()
+    image_url = None
 
-    return render_template("portfolio.html", repos=repos)
+    if request.method == "POST":
+
+        prompt = request.form.get("prompt")
+
+        result = client.images.generate(
+            model="gpt-image-1",
+            prompt=prompt,
+            size="1024x1024"
+        )
+
+        image_url = result.data[0].url
+
+    return render_template(
+        "portfolio.html",
+        image_url=image_url
+    )
 
 
 @app.route("/contact", methods=["GET", "POST"])
