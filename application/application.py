@@ -1,6 +1,6 @@
 # Sets up the routes for all the pages
 
-from flask import Flask, render_template, request, make_response
+from flask import Flask, render_template, request, make_response, session
 from flask_caching import Cache
 from config import TEMPLATES_PATH, TEXT_PATH
 from application.helpers import *
