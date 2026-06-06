@@ -50,48 +50,48 @@ def about():
     return render_template("about.html", content=content)
 
 
-# @app.route("/skills")
-# @cache.cached()
-# def skills():
-#     """Renders the 'Skills' page of the website."""
+@app.route("/skills")
+@cache.cached()
+def skills():
+    """Renders the 'Skills' page of the website."""
 
-#     skills = get_skills(f"{TEXT_PATH}/skills.json")
+    skills = get_skills(f"{TEXT_PATH}/skills.json")
 
-#     return render_template("skills.html", skills=skills)
+    return render_template("skills.html", skills=skills)
 
-@app.route("/skills", methods=["GET", "POST"])
-def chat():
+# @app.route("/skills", methods=["GET", "POST"])
+# def chat():
 
-    if "messages" not in session:
-        session["messages"] = []
+#     if "messages" not in session:
+#         session["messages"] = []
 
-    if request.method == "POST":
+#     if request.method == "POST":
 
-        prompt = request.form.get("prompt")
+#         prompt = request.form.get("prompt")
 
-        session["messages"].append({
-            "role": "user",
-            "content": prompt
-        })
+#         session["messages"].append({
+#             "role": "user",
+#             "content": prompt
+#         })
 
-        response = client.responses.create(
-            model="gpt-4.1-mini",
-            input=prompt
-        )
+#         response = client.responses.create(
+#             model="gpt-4.1-mini",
+#             input=prompt
+#         )
 
-        answer = response.output_text
+#         answer = response.output_text
 
-        session["messages"].append({
-            "role": "assistant",
-            "content": answer
-        })
+#         session["messages"].append({
+#             "role": "assistant",
+#             "content": answer
+#         })
 
-        session.modified = True
+#         session.modified = True
 
-    return render_template(
-        "skills.html",
-        messages=session["messages"]
-    )
+#     return render_template(
+#         "skills.html",
+#         messages=session["messages"]
+#     )
 
 @app.route("/portfolio")
 @cache.cached()
