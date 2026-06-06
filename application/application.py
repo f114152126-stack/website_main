@@ -60,7 +60,6 @@ def about():
 #     return render_template("skills.html", skills=skills)
 
 @app.route("/skills", methods=["GET", "POST"])
-@cache.cached()
 def skills():
 
     if "messages" not in session:
