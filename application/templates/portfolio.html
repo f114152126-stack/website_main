@@ -86,32 +86,22 @@ AI Story Generator
 
                 <div class="card-body">
 
-                    {% if world %}
-
-                        <div class="mb-4">
-                            <h4>🌍 World Background</h4>
-                            <p>{{ world }}</p>
-                        </div>
-
-                        <div class="mb-4">
-                            <h4>👤 Character Story</h4>
-                            <p>{{ character }}</p>
-                        </div>
-
-                        <div class="mb-4">
-                            <h4>📖 Main Story</h4>
-                            <p>{{ story }}</p>
-                        </div>
-
-                    {% else %}
-
-                        <div class="text-muted text-center py-5">
-                            No story generated yet
-                        </div>
-
-                    {% endif %}
-
-                </div>
+                   {% if story %}
+               
+                       <div class="mb-4">
+                           <h4>📖 Generated Story</h4>
+                           <p style="white-space: pre-line;">{{ story }}</p>
+                       </div>
+               
+                   {% else %}
+               
+                       <div class="text-muted text-center py-5">
+                           No story generated yet
+                       </div>
+               
+                   {% endif %}
+               
+               </div>
 
             </div>
 
