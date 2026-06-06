@@ -101,20 +101,17 @@ def portfolio():
 
         prompt = request.form.get("prompt")
 
-        print("Prompt:", prompt)
-
         try:
-
             result = client.images.generate(
                 model="gpt-image-1",
                 prompt=prompt,
                 size="1024x1024"
             )
 
-            print(result)
+            # ⭐ 取出圖片 URL
+            image_url = result.data[0].url
 
         except Exception as e:
-
             print("ERROR:", e)
 
     return render_template(
