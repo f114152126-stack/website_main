@@ -1,6 +1,6 @@
 # Sets up the routes for all the pages
 
-import requests
+import random
 from flask import Flask, render_template, request, make_response, session
 from flask_caching import Cache
 from config import TEMPLATES_PATH, TEXT_PATH
@@ -20,6 +20,59 @@ app.config["CACHE_TYPE"] = "simple"
 app.config["CACHE_DEFAULT_TIMEOUT"] = 3600
 cache = Cache(app)
 
+worlds = [
+    "在一個科技與魔法並存的世界",
+    "在人類已經移居外太空的未來殖民地",
+    "在一個被AI統治的城市",
+    "在戰爭後重建的廢土世界",
+    "在一個隱藏於現代社會的地下世界"
+]
+
+conflicts = [
+    "資源極度匱乏，各勢力爭奪生存空間",
+    "人類與人工智慧之間爆發衝突",
+    "古老勢力重新復甦並試圖掌控世界",
+    "政府秘密實驗導致世界秩序崩壞",
+    "不同陣營為了未知能源展開戰爭"
+]
+
+character_arcs = [
+    "逐漸發現自己的過去被刻意隱藏",
+    "在命運與自由之間掙扎",
+    "被迫成為改變世界的關鍵人物",
+    "從普通人逐漸成長為傳奇存在",
+    "在追尋真相的過程中失去重要的人"
+]
+
+main_plots = [
+    "踏上尋找真相的旅程",
+    "被捲入一場跨勢力的陰謀",
+    "必須保護一個關鍵的秘密",
+    "與強大敵人展開生死對決",
+    "試圖阻止即將毀滅世界的事件"
+]
+
+
+def generate_story(job, gender, height):
+    world = random.choice(worlds)
+    conflict = random.choice(conflicts)
+    arc = random.choice(character_arcs)
+    plot = random.choice(main_plots)
+
+    character_story = (
+        f"一名身高 {height} cm 的 {gender} {job}，"
+        f"在成長過程中展現出與眾不同的能力，"
+        f"並且 {arc}。"
+    )
+
+    world_background = f"{world}，{conflict}。"
+
+    main_story = (
+        f"{world}中，一名{job}因命運而被捲入事件，"
+        f"他/她將{plot}，並在過程中改變整個世界的走向。"
+    )
+
+    return world_background, character_story, main_story
 
 @app.route("/")
 def loading():
@@ -96,25 +149,23 @@ def skills():
 @app.route("/portfolio", methods=["GET", "POST"])
 def portfolio():
 
-    image_url = None
+    world = None
+    character = None
+    story = None
 
     if request.method == "POST":
 
-        query = request.form.get("prompt")
-        print("Query:", query)
+        job = request.form.get("job")
+        gender = request.form.get("gender")
+        height = request.form.get("height")
 
-        try:
-            # 👉 使用 Unsplash Source（免 API key 的簡單示例）
-            image_url = f"https://source.unsplash.com/1024x1024/?{query}"
-
-            print("Image URL:", image_url)
-
-        except Exception as e:
-            print("ERROR:", e)
+        world, character, story = generate_story(job, gender, height)
 
     return render_template(
         "portfolio.html",
-        image_url=image_url
+        world=world,
+        character=character,
+        story=story
     )
 
 
