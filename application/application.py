@@ -50,7 +50,7 @@ def about():
     return render_template("about.html", content=content)
 
 
-# @app.route("/chat")
+# @app.route("/skills")
 # @cache.cached()
 # def skills():
 #     """Renders the 'Skills' page of the website."""
@@ -59,7 +59,7 @@ def about():
 
 #     return render_template("skills.html", skills=skills)
 
-@app.route("/chat", methods=["GET", "POST"])
+@app.route("/skills", methods=["GET", "POST"])
 def chat():
 
     if "messages" not in session:
