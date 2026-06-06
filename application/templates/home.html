@@ -29,13 +29,25 @@
             <!-- 1st Column -->
             <div class="col-md-6 order-0 order-md-0 order-1 order-sm-0 text-center text-md-start mb-3 mb-md-0 pb-3">
                 <div class="description-box">
-                    <h2 class="main-text">Hello! <br> I'm <span class="name">Jack Chen</span></h2>
-                    <p class="secondary-text">I am a <span id="typing-text"></span></p>
-                    <div class="d-flex justify-content-center justify-content-sm-start">
-                        <button class="btn d-flex align-items-center justify-content-center" type="button">
-                            <a href="{{ url_for('about') }}">READ MORE <i class="bx bx-right-arrow-circle px-2"></i></a>
-                        </button>
-                    </div>
+                    <section class="hero">
+                        <div class="container hero-content">
+                    
+                          <img src="../static/images/avatar.jpg" alt="個人頭像" class="avatar">
+                    
+                          <h1>柏安の藝術家</h1>
+                    
+                          <p>
+                            我是一位專注於設計現代化藝術的創作者，
+                            致力於打造兼具美感の藝術品。
+                          </p>
+                    
+                          <div class="hero-buttons">
+                            <a href="#portfolio" class="btn btn-primary">查看作品</a>
+                            <a href="#contact" class="btn btn-outline">聯絡我</a>
+                          </div>
+                    
+                        </div>
+                      </section>
                 </div>
             </div>
             <!-- End of 1st Column -->
