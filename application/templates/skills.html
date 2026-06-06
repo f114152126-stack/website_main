@@ -1,96 +1,109 @@
-<!-- The 'Skills' page -->
-
 {% extends "layout.html" %}
 
 {% block head %}
-    <!-- Inherit from 'layout.html' -->
     {{ super() }}
 {% endblock %}
 
 {% block title %}
-    Skills
+    AI Assistant
 {% endblock %}
 
 {% block main %}
-    <!-- Background -->
-    <img src="../static/images/trianglify_background.png" class="background position-fixed w-100 h-100 top-0 start-0" loading="lazy">
-    <!-- End of Background -->
-    <!-- Main Content -->
-    <div class="container skills mb-5 pb-5">
-        <!-- Title -->
-        <div class="row mb-3">
-            <div class="col-md-12 text-center">
-                <h1 class="page-title">SKILLS</h1>
-            </div>
+
+<img src="../static/images/trianglify_background.png"
+     class="background position-fixed w-100 h-100 top-0 start-0"
+     loading="lazy">
+
+<div class="container py-5">
+
+    <div class="row mb-4">
+        <div class="col text-center">
+            <h1 class="page-title">AI CHAT ASSISTANT</h1>
+            <p class="text-muted">
+                Ask me anything!
+            </p>
         </div>
-        <!-- End of Title -->
-        <!-- Cards -->
-        <div class="row">
-            <!-- Languages Card -->
-            <div class="col-md-4 d-flex align-items-stretch">
-                <div class="card languages-card card-design">
-                    <div class="card-body">
-                        <h5 class="card-title text-center mb-4">Languages</h5>
-                        <div class="row">
-                            {% for language in skills[0] %}
-                                <div class="col-md-4 mb-3">
-                                    <div class="card inner-card inner-card-design">
-                                        <img src="{{ language.image }}" class="img-fluid card-img-top mx-auto d-block mt-2">
-                                        <div class="card-body">
-                                            <h5 class="card-title text-center">{{ language.title }}</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End of Languages Card -->
-            <!-- Frameworks & Libraries Card -->
-            <div class="col-md-4 d-flex align-items-stretch my-3 my-md-0">
-                <div class="card frameworks-card card-design flex-fill">
-                    <div class="card-body">
-                        <h5 class="card-title text-center mb-4">Frameworks & Libraries</h5>
-                        <div class="row">
-                            {% for framework in skills[1] %}
-                                <div class="col-md-4 mb-3">
-                                    <div class="card inner-card inner-card-design">
-                                        <img src="{{ framework.image }}" class="img-fluid card-img-top mx-auto d-block mt-2">
-                                        <div class="card-body">
-                                            <h5 class="card-title text-center">{{ framework.title }}</h5> 
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End of Frameworks & Libraries Card -->
-            <!-- Other Technologies Card -->
-            <div class="col-md-4 d-flex align-items-stretch">
-                <div class="card technologies-card card-design">
-                    <div class="card-body">
-                        <h5 class="card-title text-center mb-4">Other Technologies</h5>
-                        <div class="row">
-                            {% for technology in skills[2] %}
-                                <div class="col-md-4 mb-3">
-                                    <div class="card inner-card inner-card-design">
-                                        <img src="{{ technology.image }}" class="img-fluid card-img-top mx-auto d-block mt-2">
-                                        <div class="card-body">
-                                            <h5 class="card-title text-center">{{ technology.title }}</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End of Other Technologies Card -->
-        </div>
-        <!-- End of Cards -->
     </div>
-    <!-- End of Main Content -->
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="card shadow">
+
+                <div class="card-header text-center">
+                    Chat History
+                </div>
+
+                <div class="card-body"
+                     id="chat-box"
+                     style="height:500px; overflow-y:auto;">
+
+                    {% if messages %}
+
+                        {% for msg in messages %}
+
+                            {% if msg.role == "user" %}
+
+                                <div class="text-end mb-3">
+                                    <div class="d-inline-block bg-primary text-white rounded p-3">
+                                        {{ msg.content }}
+                                    </div>
+                                </div>
+
+                            {% else %}
+
+                                <div class="text-start mb-3">
+                                    <div class="d-inline-block bg-light rounded p-3">
+                                        {{ msg.content }}
+                                    </div>
+                                </div>
+
+                            {% endif %}
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <div class="text-center text-muted">
+                            Start a conversation...
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+                <div class="card-footer">
+
+                    <form method="POST" action="/chat">
+
+                        <div class="input-group">
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="prompt"
+                                placeholder="Type your message..."
+                                required>
+
+                            <button
+                                class="btn btn-primary"
+                                type="submit">
+                                Send
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
 {% endblock %}
