@@ -7,14 +7,14 @@ from application.helpers import *
 from openai import OpenAI
 import os
 
-client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY")
-)
 
 app = Flask(__name__, template_folder=TEMPLATES_PATH)
 app.jinja_env.filters["is_active"] = is_active
 app.jinja_env.filters["get_language_image"] = get_language_image
-
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY")
+)
+app.secret_key = os.getenv("SECRET_KEY")
 app.config["CACHE_TYPE"] = "simple"
 app.config["CACHE_DEFAULT_TIMEOUT"] = 3600
 cache = Cache(app)
