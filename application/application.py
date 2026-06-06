@@ -105,7 +105,7 @@ def portfolio():
             result = client.images.generate(
                 model="gpt-image-1",
                 prompt=prompt,
-                size="512x512"
+                size="512x512",
                 timeout=60
             )
 
