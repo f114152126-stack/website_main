@@ -1,67 +1,99 @@
-<!-- The 'Portfolio' page -->
-
 {% extends "layout.html" %}
 
-{% block head %}
-    <!-- Inherit from 'layout.html' -->
-    {{ super() }}
-{% endblock %}
-
 {% block title %}
-    Portfolio
+    AI Image Generator
 {% endblock %}
 
 {% block main %}
-    <!-- Background -->
-    <img src="../static/images/trianglify_background.png" class="background position-fixed w-100 h-100 top-0 start-0" loading="lazy">
-    <!-- End of Background -->
-    <!-- Main Content -->
-    <div class="container portfolio mb-5 pb-5">
-        <!-- Title -->
-        <div class="row mb-3">
-            <div class="col-md-12 text-center">
-                <h1 class="page-title">PORTFOLIO</h1>
-            </div>
+
+<img src="../static/images/trianglify_background.png"
+     class="background position-fixed w-100 h-100 top-0 start-0"
+     loading="lazy">
+
+<div class="container py-5">
+
+    <div class="row mb-4">
+        <div class="col text-center">
+            <h1 class="page-title">AI IMAGE GENERATOR</h1>
+            <p>Generate images with AI</p>
         </div>
-        <!-- End of Title -->
-        <!-- Projects -->
-        <div class="card portfolio-card card-design">
-            <div class="card-body">
-                <div class="row d-flex justify-content-center">
-                    {% for repo in repos %}
-                        {% if loop.index0 % 3 == 0 %}
-                            <!-- Start of New Row -->
-                            <div class="row my-lg-2">
-                        {% endif %}
-                        <!-- Start of New Card -->
-                        <div class="col-md-4 my-md-0 my-2 text-center">
-                            <div class="card inner-card inner-card-design h-100">
-                                <div class="card-header">
-                                    {% for language in repo.languages %}
-                                        <img class="img-fluid" src="{{ language | get_language_image }}" alt="{{ language }}">
-                                    {% endfor %}
-                                </div>
-                                <div class="card-body d-flex flex-column">
-                                    <h5 class="card-title">{{ repo.name }}</h5>
-                                    <p class="card-text">{{ repo.description }}</p>
-                                </div>
-                                <div class="card-footer">
-                                    <button class="btn mt-auto mx-auto w-75">
-                                        <a href="{{ repo.url }}">READ MORE <i class="bx bx-right-arrow-circle px-2"></i></a>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End of Card -->
-                        {% if loop.index0 % 3 == 2 or loop.last %}
-                            </div>
-                            <!-- End of Row -->
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-        <!-- End of Projects -->
     </div>
-    <!-- End of Main Content -->
+
+    <div class="row">
+
+        <!-- Left Panel -->
+        <div class="col-lg-4">
+
+            <div class="card card-design">
+
+                <div class="card-header">
+                    Prompt
+                </div>
+
+                <div class="card-body">
+
+                    <form method="POST">
+
+                        <div class="mb-3">
+
+                            <textarea
+                                class="form-control"
+                                rows="6"
+                                name="prompt"
+                                placeholder="Describe your image..."
+                                required></textarea>
+
+                        </div>
+
+                        <button
+                            class="btn btn-primary w-100"
+                            type="submit">
+
+                            Generate Image
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Right Panel -->
+        <div class="col-lg-8">
+
+            <div class="card card-design">
+
+                <div class="card-header">
+                    Generated Image
+                </div>
+
+                <div class="card-body text-center">
+
+                    {% if image_url %}
+
+                        <img
+                            src="{{ image_url }}"
+                            class="img-fluid rounded shadow">
+
+                    {% else %}
+
+                        <div class="text-muted py-5">
+                            No image generated yet
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
 {% endblock %}
