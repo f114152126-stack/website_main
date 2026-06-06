@@ -1,5 +1,6 @@
 # Sets up the routes for all the pages
 
+import requests
 from flask import Flask, render_template, request, make_response, session
 from flask_caching import Cache
 from config import TEMPLATES_PATH, TEXT_PATH
@@ -99,18 +100,14 @@ def portfolio():
 
     if request.method == "POST":
 
-        prompt = request.form.get("prompt")
+        query = request.form.get("prompt")
+        print("Query:", query)
 
         try:
-            result = client.images.generate(
-                model="gpt-image-1",
-                prompt=prompt,
-                size="1024x1024",
-                timeout=60
-            )
+            # 👉 使用 Unsplash Source（免 API key 的簡單示例）
+            image_url = f"https://source.unsplash.com/1024x1024/?{query}"
 
-            # ⭐ 取出圖片 URL
-            image_url = result.data[0].url
+            print("Image URL:", image_url)
 
         except Exception as e:
             print("ERROR:", e)
